@@ -45,9 +45,19 @@ subset(V3 > -60 & V3 < 0) %>%
   rasterFromXYZ() %>%
   rast()
 
+map_br = 
+ggplot()+
+  geom_sf(data = states, fill = 'linen', color = 'grey60')+
+  geom_sf(data = pe, fill = 'turquoise3')+
+  geom_sf(data = rn, fill = 'goldenrod1')+
+  theme_void()+
+  geom_text(aes(x = -50, y = -13, label = 'Brazil'),
+            size = 6)+
+  annotate('rect', xmin = -37, xmax = -34, ymin = -9.5, ymax = -4,
+           color = 'black', fill = 'transparent', size = 1)
 
  map = 
-ggplot()+
+  ggplot()+
   geom_spatraster_contour_filled(data = bathy,
                                  breaks = seq(-60, 0, by = 10),
                                  alpha = .6)+
@@ -75,7 +85,10 @@ ggplot()+
   theme(axis.title = element_blank(),
         axis.text = element_text(color = 'black'))
 
- plot = 
+ maps = map_br + map + plot_layout(widths = c(.6, 1)) 
+ maps = ggplotify::as.ggplot(maps)
+ 
+plot = 
 ggplot()+
   geom_col(data = data2, aes(x = as_date(Date, format = "%m-%Y"), 
           y = n, fill = Estado),
@@ -89,6 +102,6 @@ ggplot()+
         axis.text.x = element_text(angle = 30, color = 'black'))
 
  
- library(patchwork)  
+maps / plot
 
- map / plot
+ggsave('teste.png', dpi = 300)
