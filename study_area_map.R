@@ -92,11 +92,12 @@ ggplot()+
 plot = 
 ggplot()+
   geom_col(data = data2, aes(x = as_date(Date, format = "%m-%Y"), 
-          y = n, fill = Estado),
-           alpha = .6, position = 'identity', linewidth = 6)+
-  labs(y = "No. of monitored sets", fill = "State")+
+          y = n, fill = Estado, color = Estado),
+           alpha = 1, position = 'identity') +
+  labs(y = "No. of monitored sets", fill = "State", color = "State")+
   scale_x_date(breaks = '1 year', date_labels = '%Y')+
   scale_fill_manual(values = c('turquoise3', 'goldenrod1'))+
+  scale_color_manual(values = c('turquoise3', 'goldenrod1'))+
   theme_classic()+
   theme(axis.text = element_text(color='black'),
         axis.title.x = element_blank(),
