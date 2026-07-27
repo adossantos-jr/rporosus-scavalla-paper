@@ -13,6 +13,7 @@ library(tidyterra)
 library(terra)
 library(raster)
 library(marmap)
+library(patchwork)
 
 data$Date = data$Date %>% mdy() %>% format("%m-%Y")
 
@@ -52,7 +53,7 @@ ggplot()+
   geom_sf(data = rn, fill = 'goldenrod1')+
   theme_void()+
   geom_text(aes(x = -50, y = -13, label = 'Brazil'),
-            size = 6)+
+            size = 3)+
   annotate('rect', xmin = -37, xmax = -34, ymin = -9.5, ymax = -4,
            color = 'black', fill = 'transparent', size = 1)
 
@@ -76,32 +77,33 @@ ggplot()+
          fill = guide_colorsteps(barwidth = .5, barheight = 5,
                                  show.limits = T))+
   annotation_scale(location = 'br')+
-  annotation_north_arrow(location = 'tr', style = north_arrow_nautical)+
+  annotation_north_arrow(location = 'tl', style = north_arrow_nautical)+
   geom_text(aes(x = -36.2, y = -5.8, label = 'RN'))+
   geom_text(aes(x = -35.9, y = -8.2, label = 'PE'))+
   scale_x_continuous(breaks = seq(-37, -34, by = 1))+
   labs(color = 'Date of monitoring', fill = 'Bathymetry (m)')+
   theme_classic()+
   theme(axis.title = element_blank(),
-        axis.text = element_text(color = 'black'))
+        axis.text = element_text(color = 'black')) +
+  inset_element(map_br, .6, .6, 1, 1)
 
- maps = map_br + map + plot_layout(widths = c(.6, 1)) 
- maps = ggplotify::as.ggplot(maps)
+
  
 plot = 
 ggplot()+
   geom_col(data = data2, aes(x = as_date(Date, format = "%m-%Y"), 
           y = n, fill = Estado),
-           alpha = .6, position = 'identity')+
+           alpha = .6, position = 'identity', linewidth = 6)+
   labs(y = "No. of monitored sets", fill = "State")+
   scale_x_date(breaks = '1 year', date_labels = '%Y')+
   scale_fill_manual(values = c('turquoise3', 'goldenrod1'))+
   theme_classic()+
   theme(axis.text = element_text(color='black'),
         axis.title.x = element_blank(),
-        axis.text.x = element_text(angle = 30, color = 'black'))
+        axis.text.x = element_text(angle = 40, color = 'black', vjust = .8))
 
  
-maps / plot
+map + plot + plot_layout(widths = c(1, 1))
 
 ggsave('teste.png', dpi = 300)
+        
