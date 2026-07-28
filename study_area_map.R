@@ -63,13 +63,13 @@ ggplot()+
                                  breaks = seq(-60, 0, by = 10),
                                  alpha = .6)+
   geom_sf(data = states, fill = 'linen')+
-  geom_sf(data = pe, fill = 'turquoise3')+
-  geom_sf(data = rn, fill = 'goldenrod1')+
+  geom_sf(data = pe, fill = 'plum1')+
+  geom_sf(data = rn, fill = 'lightgoldenrod3')+
   geom_point(data = data,
              aes(x = Lon, y = Lat,
                  color = as_date(Date, format ="%m-%Y")),
              alpha = .7, size = 2)+
-  scale_color_viridis_c(trans = 'date', option = 'magma',
+  scale_color_viridis_c(trans = 'date', option = 'plasma',
                         guide = 'colorsteps')+
   scale_fill_manual(values = c('grey20', 'grey40', 'grey60', 'grey75', 'grey85', 'grey95'))+
   coord_sf(xlim = c(-37, -34), ylim = c(-9.5, -4))+
@@ -96,8 +96,8 @@ ggplot()+
            alpha = 1, position = 'identity') +
   labs(y = "No. of monitored sets", fill = "State", color = "State")+
   scale_x_date(breaks = '1 year', date_labels = '%Y')+
-  scale_fill_manual(values = c('turquoise3', 'goldenrod1'))+
-  scale_color_manual(values = c('turquoise3', 'goldenrod1'))+
+  scale_fill_manual(values = c('plum1', 'lightgoldenrod3'))+
+  scale_color_manual(values = c('plum1', 'lightgoldenrod3'))+
   theme_classic()+
   theme(axis.text = element_text(color='black'),
         axis.title.x = element_blank(),
@@ -106,5 +106,5 @@ ggplot()+
  
 map + plot + plot_layout(widths = c(1, 1))
 
-ggsave('teste.png', dpi = 300)
+# ggsave('study_area_map.png', dpi = 600)
         
