@@ -5,12 +5,16 @@ library(lubridate)
 
 ldata = read.csv("length_data_fixed.csv")
 
-ldata$year = dmy(ldata$date) %>% year()
+ldata$year = ldata$date %>% mdy() %>% year()
 
-ggplot(ldata)+
-  geom_histogram(aes(y = as.numeric(fl)))
-
-
+rpor_data = ldata %>% subset(species == "Rhizoprionodon porosus")
+sbra_data = ldata %>% subset(species == "Scomberomorus brasiliensis")
 
 
-teste = data.frame(a = ldata$date, b = dmy(ldata$date))
+ggplot(rpor_data)+
+  geom_histogram(aes(y = fl, fill = state))+
+  facet_wrap(~year)
+
+ggplot(sbra_data)+
+  geom_histogram(aes(y = fl, fill = state))+
+  facet_wrap(~year)
