@@ -17,6 +17,7 @@ ggplot(rpor_data)+
   facet_wrap(~year)+
   labs(y = 'FL (cm)', fill = 'State')+
   ggtitle('Rhizoprionodon porosus')+
+  theme_test()+
   theme(axis.title.x = element_blank(),
         plot.title = element_text(face = 'italic'))
 
@@ -26,6 +27,11 @@ ggplot(sbra_data)+
   facet_wrap(~year)+
   labs(y = 'FL (cm)', fill = 'State')+
   ggtitle('Scomberomorus brasiliensis')+
+  theme_test()+
   theme(axis.title.x = element_blank())+
   theme(axis.title.x = element_blank(),
         plot.title = element_text(face = 'italic'))
+
+
+
+
