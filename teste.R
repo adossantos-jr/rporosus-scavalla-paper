@@ -60,7 +60,7 @@ ci_level = 0.95                            # confidence level for bootstrap CIs
 ## ---- 1. PARAMETERS & THRESHOLDS --------------------------------------------
 
 params = tibble::tibble(
-  species_common = c("tuba", "serra"),
+  species_common = c("R. porosus", "S. brasiliensis"),
   species_sci    = c("Rhizoprionodon porosus", "Scomberomorus brasiliensis"),
   l50            = c(54.4, 42.1),
   m              = c(0.765, 0.36),
@@ -108,13 +108,13 @@ print(table(data_clean$species_common))
 # rows carry different (species-specific) thresholds.
 categorize_lengths = function(fl, l50, lopt, ms) {
   out = case_when(
-    fl <  l50               ~ "Below_L50",
-    fl >= l50  & fl < lopt  ~ "L50_to_Lopt",
-    fl >= lopt & fl < ms    ~ "At_Lopt",
-    fl >= ms                ~ "MS_megaspawner",
+    fl <  l50               ~ "Below L50",
+    fl >= l50  & fl < lopt  ~ "Adult below Lopt",
+    fl >= lopt & fl < ms    ~ "Lopt",
+    fl >= ms                ~ "MS",
     TRUE                    ~ NA_character_
   )
-  factor(out, levels = c("Below_L50", "L50_to_Lopt", "At_Lopt", "MS_megaspawner"))
+  factor(out, levels = c("Below L50", "Adult below Lopt", "Lopt", "MS"))
 }
 
 ## ---- 4. BASE-CASE CATEGORIZATION -------------------------------------------
@@ -189,13 +189,14 @@ sensitivity_plot = ggplot(
   facet_wrap(~species_common) +
   scale_y_continuous(labels = percent_format()) +
   labs(
-    title = "Sensitivity of length-category composition to threshold scaling",
-    x = "Threshold adjustment (L50, Lopt, MS scaled together)",
+    x = "Threshold adjustment",
     y = "Proportion of individuals",
     fill = "Category"
   ) +
   theme_minimal(base_size = 12) +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom",
+        strip.text = element_text(face = "italic"),
+        axis.text = element_text(color = 'black'))
 
 ggsave(file.path(output_dir, "sensitivity_plot.png"), sensitivity_plot,
        width = 9, height = 5, dpi = 300)
@@ -212,7 +213,7 @@ bootstrap_category_ci = function(species_name, n_boot = 1000, ci_level = 0.95) {
     pull(fl)
   
   n_obs = length(fl_values)
-  categories = c("Below_L50", "L50_to_Lopt", "At_Lopt", "MS_megaspawner")
+  categories = c("Below L50", "Adult below Lopt", "Lopt", "MS")
   
   boot_props = matrix(NA_real_, nrow = n_boot, ncol = length(categories),
                        dimnames = list(NULL, categories))
@@ -250,15 +251,14 @@ write_csv(bootstrap_ci_results, file.path(output_dir, "bootstrap_category_ci.csv
 # Plot: proportion estimates with bootstrap CI error bars
 bootstrap_ci_plot = ggplot(
   bootstrap_ci_results,
-  aes(x = category, y = point_estimate, fill = category)
+  aes(x = factor(category, levels = c('Below L50', 'Adult below Lopt', 'Lopt', 'MS')), 
+      y = point_estimate, fill = category)
 ) +
   geom_col() +
   geom_errorbar(aes(ymin = ci_lower, ymax = ci_upper), width = 0.2) +
   facet_wrap(~species_common) +
   scale_y_continuous(labels = percent_format()) +
   labs(
-    title = sprintf("Category proportions with %.0f%% bootstrap CIs (n_boot = %d)",
-                    ci_level * 100, n_boot),
     x = "Length category", y = "Proportion of individuals"
   ) +
   theme_minimal(base_size = 12) +

@@ -105,5 +105,5 @@ ggplot()+
  
 map + plot + plot_layout(widths = c(1, 1))
 
-ggsave('study_area_map.png', dpi = 600, h = 12/2.5, w = 24/2.5)
+# ggsave('study_area_map.png', dpi = 600, h = 12/2.5, w = 24/2.5)
         
