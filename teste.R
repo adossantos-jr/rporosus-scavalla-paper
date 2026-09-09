@@ -313,9 +313,10 @@ threshold_lines = params %>%
   select(species_common, l50, lopt, ms) %>%
   pivot_longer(cols = c(l50, lopt, ms), names_to = "threshold", values_to = "value")
 
-length_freq_plot = ggplot(length_freq_ci, aes(x = fl_mid, y = freq_mean)) +
-  geom_ribbon(aes(ymin = freq_lower, ymax = freq_upper), fill = "steelblue", alpha = 0.3) +
-  geom_line(color = "steelblue", linewidth = 0.8) +
+#length_freq_plot =
+  ggplot(length_freq_ci, aes(x = fl_mid, y = freq_mean)) +
+  geom_ribbon(aes(ymin = freq_lower, ymax = freq_upper), fill = "grey40", alpha = 0.3) +
+  geom_line(color = "grey40", linewidth = 0.8) +
   geom_vline(
     data = threshold_lines,
     aes(xintercept = value, linetype = threshold),
@@ -323,13 +324,14 @@ length_freq_plot = ggplot(length_freq_ci, aes(x = fl_mid, y = freq_mean)) +
   ) +
   facet_wrap(~species_common, scales = "free_x") +
   labs(
-    title = sprintf("Length-frequency distribution with %.0f%% bootstrap CI band", ci_level * 100),
-    subtitle = "Vertical lines: L50, Lopt, MS (mega-spawner) thresholds",
     x = "Fork length (cm)", y = "Relative frequency",
     linetype = "Threshold"
   ) +
   theme_minimal(base_size = 12) +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom",
+        strip.text = element_text(face = "italic"),
+        axis.text = element_text(color = 'black'),
+        )
 
 ggsave(file.path(output_dir, "length_frequency_ci_plot.png"), length_freq_plot,
        width = 10, height = 5, dpi = 300)
