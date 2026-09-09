@@ -258,11 +258,13 @@ bootstrap_ci_plot = ggplot(
   geom_errorbar(aes(ymin = ci_lower, ymax = ci_upper), width = 0.2) +
   facet_wrap(~species_common) +
   scale_y_continuous(labels = percent_format()) +
-  labs(
-    x = "Length category", y = "Proportion of individuals"
+  labs(y = "Proportion of individuals"
   ) +
   theme_minimal(base_size = 12) +
-  theme(legend.position = "none", axis.text.x = element_text(angle = 30, hjust = 1))
+  theme(legend.position = "none", axis.text.x = element_text(angle = 30, hjust = 1),
+        strip.text = element_text(face = "italic"),
+        axis.text = element_text(color = 'black'),
+        axis.title.x = element_blank())
 
 ggsave(file.path(output_dir, "bootstrap_category_ci_plot.png"), bootstrap_ci_plot,
        width = 9, height = 5, dpi = 300)
